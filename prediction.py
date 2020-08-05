@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 import os
 import numpy as np
 from keras.models import Sequential, load_model
@@ -79,11 +79,11 @@ def cnn_lstm_model(trainX, trainY, testX, testY):
                      data_format='channels_last'))
     model.compile(loss='mse', optimizer='adadelta')
 
-    history = model.fit(trainX, trainY, batch_size=10, epochs=50, validation_split=0.05)
+    history = model.fit(trainX, trainY, batch_size=10, epochs=2000, validation_split=0.05)
     print(model.evaluate(testX, testY))
 
     # 保存模型
-    model.save('model1.h5')
+    model.save('model2.h5')
 
     # 画图
     plt.figure(1)
@@ -139,29 +139,48 @@ if __name__ == '__main__':
     trainX_1, trainY_1, testX_1, testY_1 = getDataset(data1)
     trainX_2, trainY_2, testX_2, testY_2 = getDataset(data2)
     # 运行CNN_LSTM模型
-    cnn_lstm_model(trainX_1, trainY_1, testX_1, testY_1)
-    # cnn_lstm_model(trainX_2, trainY_2, testX_2, testY_2)
-    sys.exit(0)
+    #cnn_lstm_model(trainX_1, trainY_1, testX_1, testY_1)
+    #cnn_lstm_model(trainX_2, trainY_2, testX_2, testY_2)
+    #sys.exit(0)
     #导入模型
     model1 = load_model("model1.h5")
     testPrediction1 = model1.predict(testX_1)
-    # model2 = load_model("model2.h5")
-    # testPrediction2 = model2.predict(testX_2)
+    model2 = load_model("model2.h5")
+    testPrediction2 = model2.predict(testX_2)
     #反归一化
     testY_1 = testY_1 * (max1 - min1) + min1
     testPrediction1 = testPrediction1 * (max1 - min1) + min1
-    # testY_2 = testY_2 * (max2 - min2) + min2
-    # testPrediction2 = testPrediction2 * (max2 - min2) + min2
-    # testY_result = testY_1 + testY_2
-    # testPrediction_result = testPrediction1 + testPrediction2
+    testY_2 = testY_2 * (max2 - min2) + min2
+    testPrediction2 = testPrediction2 * (max2 - min2) + min2
+    testY_result = testY_1 + testY_2
+    testPrediction_result = testPrediction1 + testPrediction2
     #画图
     plt.figure(2)
-    plt.plot(testY_1[0, :, 0])
-    plt.plot(testPrediction1[0, :, 0])
-    # plt.plot(testY_result[0, :, 0])
-    # plt.plot(testPrediction_result[0, :, 0])
-    plt.ylim((11,14))
-    plt.legend(["true", "prediction"])
+    #plt.plot(testY_2[0, :, 0])
+    #plt.plot(testPrediction2[0, :, 0])
+    plt.subplot("421")
+    plt.plot(testY_result[0, :, 0])
+    plt.plot(testPrediction_result[0, :, 0])
+    plt.subplot("422")
+    plt.plot(testY_result[0, :, 1])
+    plt.plot(testPrediction_result[0, :, 1])
+    plt.subplot("423")
+    plt.plot(testY_result[0, :, 2])
+    plt.plot(testPrediction_result[0, :, 2])
+    plt.subplot("424")
+    plt.plot(testY_result[0, :, 3])
+    plt.plot(testPrediction_result[0, :, 3])
+    plt.subplot("425")
+    plt.plot(testY_result[0, :, 4])
+    plt.plot(testPrediction_result[0, :, 4])
+    plt.subplot("426")
+    plt.plot(testY_result[0, :, 5])
+    plt.plot(testPrediction_result[0, :, 5])
+    plt.subplot("427")
+    plt.plot(testY_result[0, :, 6])
+    plt.plot(testPrediction_result[0, :, 6])
+    #plt.ylim((11,14))
+    #plt.legend(["true", "prediction"])
     plt.show()
 
 
